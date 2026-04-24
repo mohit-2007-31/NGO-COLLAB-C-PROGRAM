@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+// Structure
+typedef struct 
+{
+    char name[100];
+    char date[12];
+    char category[30];
+    char location[50];
+} Event;
+
+// Function to convert string to lowercase for case-insensitive search
+void to_lowercase(char str[])
+{
+    for (int i = 0; str[i]; i++) 
+    {
+        str[i] = tolower(str[i]);
+    }
+}
+void print_header() 
+{
+    printf("\n%-30s | %-12s | %-15s | %-25s\n", "Event Name", "Date", "Category", "Location");
+    printf("--------------------------------------------------------------------------------------------\n");
+}
+
+int main()
+{
+    // Initializing Database (Hard-coded array of 10 entries)
+    Event database[10] = {
+        {"Blood Donation Drive", "25-03-2026", "Donation", "Joy Hospital, Chembur"},
+        {"Zero Waste Workshop", "25-03-2026", "Workshop", "Diamond Garden"},
+        {"Tech Skills for Youth", "26-03-2026", "Workshop", "Sree Narayana College"},
+        {"Clothing Collection Camp", "26-03-2026", "Donation", "Chembur Station (East)"},
+        {"Urban Gardening Seminar", "27-03-2026", "Workshop", "Sandu Garden"},
+        {"Food Distribution Drive", "27-03-2026", "Donation", "Shell Colony"},
+        {"Digital Literacy Class", "28-03-2026", "Workshop", "Library Ground"},
+        {"E-Waste Collection", "28-03-2026", "Donation", "Natraj Cinema Lane"},
+        {"Solar Energy Awareness", "29-03-2026", "Workshop", "Fine Arts Society"},
+        {"Toy Donation for NGO", "29-03-2026", "Donation", "Trombay Road"}
+    };
+
+    int choice;
+    char searchDate[12], searchCat[30];
+
+    do {
+        printf("\n--- LOCAL ALLIANCE NAVIGATOR (SDG-17) ---");
+        printf("\n1. View All Local Initiatives");
+        printf("\n2. Search by Date & Category");
+        printf("\n3. Exit");
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
+        getchar(); // Clean newline buffer
+
+        switch (choice)
+        {
+            case 1:
+                print_header();
+                for (int i = 0; i < 10; i++) {
+                    printf("%-30s | %-12s | %-15s | %-25s\n",
+                           database[i].name, database[i].date, database[i].category, database[i].location);
+                }
+                break;
+
+            case 2:
+                printf("Enter Date (DD-MM-YYYY)(25-03-2026 to 29-03-2026): ");
+                scanf("%s", searchDate);
+                printf("Enter Category (Workshop/Donation): ");
+                scanf("%s", searchCat);
+
+                char tempCat[30], dbCat[30];
+                strcpy(tempCat, searchCat);
+                to_lowercase(tempCat);
+
+                print_header();
+                int found = 0;
+                for (int i = 0; i < 10; i++)
+                {
+                    strcpy(dbCat, database[i].category);
+                    to_lowercase(dbCat);
+
+                    if (strcmp(database[i].date, searchDate) == 0 && strcmp(dbCat, tempCat) == 0) {
+                        printf("%-30s | %-12s | %-15s | %-25s\n",
+                               database[i].name, database[i].date, database[i].category, database[i].location);
+                        found = 1;
+                    }
+                }
+                if (!found) printf("No matching events found for that date and category.\n");
+                break;
+
+            case 3:
+                printf("Exiting... Let's build a sustainable Chembur together!\n");
+                break;
+
+            default:
+                printf("Invalid choice. Try again.\n");
+        }
+        
+    } while (choice != 3);
+
+    return 0;
+}
